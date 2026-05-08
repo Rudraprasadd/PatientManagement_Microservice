@@ -5,103 +5,99 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.3.0</version> <!-- Spring Boot 4 doesn't exist yet -->
+        <relativePath/>
     </parent>
     <groupId>com.pm</groupId>
     <artifactId>billing-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>billing-service</name>
     <description>billing-service</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>21</java.version>
+        <grpc.version>1.68.1</grpc.version>
+        <protobuf.version>3.25.5</protobuf.version>
     </properties>
+
     <dependencies>
+        <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId> <!-- fixed -->
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId> <!-- fixed -->
             <scope>test</scope>
         </dependency>
 
-        <!--GRPC -->
+        <!-- gRPC -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
-            <version>1.69.0</version>
+            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.69.0</version>
+            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.69.0</version>
+            <version>${grpc.version}</version>
         </dependency>
-        <dependency> <!-- necessary for Java 9+ -->
+
+        <!-- Required for Java 9+ (javax.annotation.Generated) -->
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>annotations-api</artifactId>
             <version>6.0.53</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- gRPC Spring Boot integration -->
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-spring-boot-starter</artifactId>
             <version>3.1.0.RELEASE</version>
         </dependency>
+
+        <!-- Protobuf — must match protoc version -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>4.29.1</version>
+            <version>${protobuf.version}</version> <!-- fixed: was 4.29.1 -->
         </dependency>
-
     </dependencies>
-
 
     <build>
         <extensions>
-            <!-- Ensure OS compatibility for protoc -->
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <version>1.7.1</version>
             </extension>
         </extensions>
         <plugins>
-            <!-- Spring boot / maven  -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- PROTO -->
+            <!-- Protobuf code generation -->
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:3.25.5:exe:${os.detected.classifier}</protocArtifact>
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
                     <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.68.1:exe:${os.detected.classifier}</pluginArtifact>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    <outputDirectory>${project.build.directory}/generated-sources/protobuf/java</outputDirectory>
+                    <clearOutputDirectory>false</clearOutputDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -112,8 +108,28 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Register generated sources so IntelliJ sees them -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/protobuf/java</source>
+                                <source>${project.build.directory}/generated-sources/protobuf/grpc-java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
-
 </project>
