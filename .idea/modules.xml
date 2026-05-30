@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PatientManagement_Microservice.iml" filepath="$PROJECT_DIR$/.idea/PatientManagement_Microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/analytics-service/analytics-service.iml" filepath="$PROJECT_DIR$/analytics-service/analytics-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/patient-management/billing-service/billing-service.iml" filepath="$PROJECT_DIR$/patient-management/billing-service/billing-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/patient-management/patient-service/patient-service.iml" filepath="$PROJECT_DIR$/patient-management/patient-service/patient-service.iml" />
     </modules>
   </component>
 </project>
