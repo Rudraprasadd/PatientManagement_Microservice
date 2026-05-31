@@ -7,6 +7,16 @@ spring:
       server:
         webflux:
           routes:
+
+            # http://localhost:4004/auth/login
+            # API Gateway -> http://auth-service:4005/login
+            - id: auth-service-route
+              uri: http://auth-service:4005
+              predicates:
+                  - Path=/auth/**
+              Filters:
+                  - StripPreFix=1
+
             #Route for /api/patients/** to patient-service
             - id: patient-service-route
               uri: http://patient-service:4000

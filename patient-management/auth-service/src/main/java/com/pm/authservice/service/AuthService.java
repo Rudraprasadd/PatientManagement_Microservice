@@ -21,22 +21,19 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    //password request -> password -> encoded -> encoded pass
     public Optional<String> authenticate(LoginRequestDTO loginRequestDTO) {
-        Optional<String> token = userService
+        return userService
                 .findByEmail(loginRequestDTO.getEmail())
-                .filter(U -> passwordEncoder.matches(LoginRequestDTO.getPassword(),
-                        U.getPassword()))
-                .map(U -> jwtUtil.generateToken(U.getEmail(),U.getRole()));
-
-        return token;
+                .filter(u -> passwordEncoder.matches(loginRequestDTO.getPassword(), // fix 1
+                        u.getPassword()))
+                .map(u -> jwtUtil.generateToken(u.getEmail(), u.getRole()));
     }
 
     public boolean validateToken(String token) {
         try {
-            JwtUtil.validateToken(token);
+            jwtUtil.validateToken(token); // fix 2
             return true;
-        }catch(JwtException e){
+        } catch (JwtException e) {
             return false;
         }
     }
