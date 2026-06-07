@@ -14,7 +14,7 @@ spring:
               uri: http://auth-service:4005
               predicates:
                   - Path=/auth/**
-              Filters:
+              filters:
                   - StripPrefix=1
 
             #Route for /api/patients/** to patient-service
