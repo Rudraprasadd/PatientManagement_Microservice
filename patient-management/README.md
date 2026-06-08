@@ -348,27 +348,6 @@ There is currently no `docker-compose.yml` in the repository. To run the full sy
 - `analytics-service` currently listens to topic `patient`; align the topic names before relying on analytics events.
 - In production, do not keep JWT secrets in `application.properties`.
 
-## Future Improvements
 
-- Add Docker Compose for one-command local startup.
-- Add Flyway or Liquibase for database migrations.
-- Add service discovery or Kubernetes service DNS.
-- Add Resilience4j timeout, retry, and circuit breaker support.
-- Add centralized logging and distributed tracing.
-- Add role-based authorization.
-- Add refresh-token support.
-- Add unit tests for service logic.
-- Add Testcontainers for database, Kafka, and gRPC integration tests.
-- Fix Kafka topic naming consistency.
-- Make billing account creation idempotent using patient id.
 
-## Interview Prep
-
-This repository includes a detailed interview guide:
-
-```text
-INTERVIEW_PREP.md
-```
-
-It contains architecture explanations, service-by-service walkthroughs, project pitch, improvement points, and expected interview questions.
 
